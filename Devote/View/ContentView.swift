@@ -11,10 +11,11 @@ import CoreData
 struct ContentView: View {
     // MARK: - PROPERTY
     
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @State var task: String = ""
     @State private var showNewTaskItem: Bool = false
     
-   
+    
     
     // MARK: - FETCHING DATA
     @Environment(\.managedObjectContext) private var viewContext
@@ -26,7 +27,7 @@ struct ContentView: View {
     
     // MARK: - FUNCTION
     
-   
+    
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
@@ -48,6 +49,38 @@ struct ContentView: View {
                 // MARK: - MAIN VIEW
                 VStack {
                     // MARK: - HEADER
+                    
+                    HStack(spacing: 10)  {
+                        // TITLE
+                        Text("Devote")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.heavy)
+                            .padding(.leading, 4)
+                        
+                        Spacer()
+                        
+                        // EDIT BUTTON
+                        EditButton()
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .padding(.horizontal, 10)
+                            .frame(minWidth: 70, minHeight: 24)
+                            .background(
+                                Capsule().stroke(Color.white, lineWidth: 2)
+                            )
+                        
+                        // APPEARANCE BUTTON
+                        Button(action: {
+                            isDarkMode.toggle()
+                        }, label: {
+                            Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .font(.system(.title, design: .rounded))
+                        })
+                    }
+                    .padding()
+                    .foregroundColor(.white)
+                    
                     Spacer(minLength: 80)
                     // MARK: - NEW TASK BUTTON
                     Button(action: {
@@ -57,7 +90,7 @@ struct ContentView: View {
                             .font(.system(size: 30, weight: .bold, design: .rounded))
                         Text("New Task")
                             .font(.system(size: 24, weight: .bold, design: .rounded))
-                            
+                        
                     })
                     .foregroundColor(.white)
                     .padding(.horizontal, 20)
@@ -110,11 +143,7 @@ struct ContentView: View {
                 UITableView.appearance().backgroundColor = UIColor.clear
             }
             .navigationBarTitle("Daily Tasks", displayMode: .large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-            }
+            .navigationBarHidden(true)
             .background(
                 BackgroundImageView()
             )
